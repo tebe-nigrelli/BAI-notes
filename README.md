@@ -25,7 +25,7 @@ All of first year involved learning how to study and adapting to the heavier wor
 **Second Semester**
 - Y12 AN2: Mathematical Analysis Mod. 2
 - Y12 PH1: Foundations Of Physics I
-- Y12 CS2: Computer Science Mod. 2
+- [Y12 CS2](Y12_CS2): Computer Science Mod. 2
 - Y12 PRO: Probability
 
 ## Second Year
