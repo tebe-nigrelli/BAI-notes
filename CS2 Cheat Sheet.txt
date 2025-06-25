@@ -1,0 +1,314 @@
+* Huffman Encoding
+For an alphabet V with frequency f(v), find an encoding l(v) which minimises Expected length.
+SUM of f(v) * l(v)
+A variable length encoding should be prefix free.
+Unbalanced Tree
+Not always the best
+1. Construct a tree from root 1, adding (0,1) as children of root 1.
+2. Assign from most frequent, going down.
+(Balanced) =Huffman tree=
+Repeatedly merge the two least frequent characters until all characters are accounted for. Because the tree is balanced, it minimizes the average length of the encoded message.
+* Dynamic Programming
+1. Find the subproblem
+   + Linear  (n)
+   + Pairs   (m*n)
+   + Subtree (n)
+2. Express solution in terms of subproblems
+there is an underlying dag structure
+3. Optimise memory with symmetries
+recursion tree has polynomial depth and exponential problems
+4. Implement
+* Shortest Path Problem (DAG)
+dist[v] = min(dist[v], dist[u] + weight(u, v))
+O(|V| + |E|)
+dist(.) = infinity
+dist(s) = 0
+for v in Vertices\{s} linearised order:
+    dist(v) = min_edge {dist(u) + l(u,v)}
+* Shortest Reliable Path
+Shortest path of length L.
+dist(v,0) = infinity
+dist(v,i) = length of shortest path s to v, using i edges
+dist(v,i) = min value for edge (u,v) {dist(u, i-1) + l(u,v)}
+* All Pairs Shorten Path
+Floyd-Warshall
+time, space O(V^3)
+# initialisation to infinity
+for i=1 to n:
+    for j=1 to n:
+        dist(i, j, 0) = ∞
+# default length
+for all (i, j) ∈ E:
+        dist(i, j, 0) = l(i, j)
+# iteration of the min distance
+for k=1 to n:
+    for i=1 to n:
+        for j=1 to n:
+            dist(i,j,k)=min{dist(i,k,k−1)+dist(k,j,k−1), dist(i,j,k−1)}
+Iterates over all vertices with k and updates the dist matrix by considering whether the shortest path from vertex i to vertex j can be improved by including a vertex k (up to n) as an intermediate vertex.
+Like in knapsack, the extra dimension [k] allows the algorithm to store and retrieve the intermediate results.
+* TSP
+Consider subset of vertices.
+Cost(S,j) = cost of reaching j, starting from the set of vertices S, given a source.
+Defined as the minimum cost to get to a node which is not j, plus the min distance from there to j.
+Cost(S,j) = min_{i∈S : i̸=j} {Cost(S−{j},i) + d_ij}
+O(n^2 * 2^n)
+* Levenstein Distance
+Find edit distance between two strings.
+E(i,j) edit distance between A.substring(0,i) and B.substring(0,j).
+E(i,j) = min {1 + E(i-1,j); 1 + E(i,j-1); D_(i-j) + E(i-1,j-1)}
+for i=j => D(..) = 0, otherwise 1
+There are three cases for alignment of the last column, before aligning the rest:
+- X. :: cost 1 + E(i-1,j)
+- .Y :: cost 1 + E(i,j-1)
+- XY :: D(i-j) + E(i-1,j-1)
+The answers go low to high for computability and form a 2d table.
+in the table lengths are 1, except i=j with 0
++ Move down  :: delete
++ Move right :: insert
++ Diagonal   :: match or substitution
+=Distance is the shortest path in the dag, out of all possible moves.=
+Base: E(0,∅) = E(0,∅) = 1
+1. Draw grid with [ε + L E T T E R]
+2. T(0,0) = 0
+3. Get the min between {left, up, diagonal} neighbours
+4. If (x,y) chars are different add one in the new box
+5. Take the value of the last square.
+* Knapsack
+In an optimal solution, removing an item will give an optimal solution for the smaller weight.
+T[u_tot] = max {for i : w_i <= w_tot} (T[u], T[u-w[i]] + v[i])
++ Base case :: value(0) = 0
+The fomula builds on two choices: excluding item i (keeping the same capacity) or including item i (subtracting its weight and adding its value to the remaining capacity).
+# builds a heavier knapsack from smaller ones
+def knapsack(W, w, v): # W capacity, w weights per item, v values per item
+    T = [0] * (W+1) # stores values per knapsack capacity
+    for u in range(1, W+1): # traverse every knapsack capacity, smallest to largest
+        for i in range(len(w)):
+            # skip the iteration if w is already
+            # in the knapsack and you can't have repetitions
+            if w[i] <= u:
+                T[u] = max(T[u], T[u-w[i]] + v[i])
+    return T[W] # maximum value for capacity W
+Time  O(n * W_tot), Space O(W).
+Decision version is NP-complete, but traditional problem is NP-hard.
+* Independent set problem (tree)
+Find the largest set of nodes, so the elements don't have edges between them, in a Tree (DAG).
+Note a node cannot be in the same set as its grandchildren
+_Sequential Algorithm_, G(V,E)
+1. Start from an arbitrary root,
+2. Consider belonging or not:
+   + Belongs :: skip neighbours, go to 2nd.
+store A[v] size of largest independent tree, rooted at v
+I(u) = size of the largest independent set of subtree hanging from u.
++ A root has n number of children
++ A node has a value if it is in the set and one if it isn't
++ Draw the tree in rows
+Build the tree from the bottom: decide whether to add or not the next row based on inclusion or not
+Find I(r)
+Time, Space O(N)
+* Longest Increasing Sub-sequence
+LIS[n] = 1 + max { LIS[0..(n-1)], if A[k] < A[n]}
+def lis(A):
+    L = [1] * len(A)
+    for i in range(1, len(L)):
+        sub = [L[k] for k in range(i) if A[k] < A[i]]
+        L[i] = 1 + max(sub, default = 0)
+    return max(L, default = 0)
+* Highest count of a subsequence
+Let T[i] be count of a subsequence up to.
+T[1] = x_1
+for i in range(2, n):
+    T[i] = max {x_i, T[i-1] + x_i}
+* Flow optimisation
+_Maximum Flow - Minimum Cut Theorem_
+The maximum flow through any network from a given source to a given sink is exactly equal to the minimum sum of a cut.
+non-unique solution
+This is effectively a simplex problem.
+_Flow graph_
++ Poles :: {Source | Sink}
++ Directed edges with a capacity
++ Conservation :: sum (in) = sum (out)
+capacity is an uppper bound
+_Ford-Fulkerson Algorithm_
+Repeatedly finds an =augmenting path= and improves the current path.
+Stop when no more paths can be found, aka no extra flow can be carried.
+O(E * f), for f maximum flow
+_Algorithm_
+1. Keep a counter with the flow that can be carried.
+2. Iterate until no new path can be found:
+eventually the remaining flow is zero
+   1. Take the minimum flow along the path and add it to the counter
+   2. Subtract the flow along the path from every edge in the path
+   3. Add a residual edge in the opposite direction
+   edge + residual = capacity
+=Residual edges= are used to "undo" bad augmenting paths.
++ Flow + Residual = Capacity
+The residual graph rapresents a path to redirect flow
+Edmonds-Karp (using BFS): converges in O(E^2 V).
+* Simplex Method
+Production Problem
+Maximisation problem of the form:
+Maximise (a dot x), subject to (A x <= c), for (x_i >=0)
+If a solution exists, it is at the vertex of this =convex= feasible set.
+Infeasible Solution, Unbounded Set
+Start at a vertex and look for an adjacent vertex with a better objective value at the intersection of pairs of conditions, until convergence.
++ Minimisation :: negate the maximisation
++ Equality of a variable :: duplicate into <= and >=
++ Inequality into equation :: include nonnegative slack variable
++ Positive OR Negative variable :: use x_+ and x_-, x = x_+ - x_-
++ Countable feasible points :: add a perturbation to the equations so they
+Choose a subset of the inequalities, If there is a unique point satisfying them (=), it's a vertex.
+1. Check whether the vertex is optimal.
+2. Determine where to move next.
+=Algorithm=
+1. Set the initial point to the origin, choosing 2 constraints.
+optimal iff (c_i < 0) for all i
+2. Swap two constraint, increase a free x_i until the constraint is hit.
+3. Set the new constraints to be (y1, y2) and express the others in terms. There solution is at the origin, iterate.
+* Duality
+Every Linear Programming problem has a corresponding dual problem.
+Primal: Maximise c^T x, for Ax = b, x >= 0
+Dual:   Minimise b^T y, for A^t y >= c, for y unrestricted
++ Variables are non-negative.
+Eliminate any variables b_i with negative coefficients (-1)
++ Constraints are equality constraints.
+Convert inequalities by introducing non-negative slack variables
++ Constraints are linear combinations of variables.
++ The objective function is to maximize or minimize a linear combination of variables.
+_Weak Duality_
+The optimal solution of one problem can be bounded from below by the feasible values of the other.
+For any feasible solution, c^T x <= y^T b
+_Strong Duality_
+The dual has an optimal solution iff the primal does too.
+for x* and y* optimal solutions, c^T x* = (y*)^T b
+proving that a solution is optimal means showing it equals the solution to the dual
+Given an increase in b in the primal, for some s.
+Primal: max C^Tx, Ax <= b + s, x  >= 0
+Dual: min y^T x, y^Tx >= c^T,  y  >= 0
+=z(s) - z(0) = y^T s=
+_Complementary Slackness_
+For x, y feasible solutions to primal and dual,
+x and y are optimal solutions iff y^T (b - Ax) = 0 and (y^T - c^T)x = 0.
+* NP completeness
++ NP :: problem whose solution can be checked in polynomial time.
++ P  :: problem solvable in polynomial time.
+NP is a subset of P
+  + Sorting, Shortest Path, Linear Programming
+=Search Problem= algorithms evaluate if I has solution S.
+V(Inputs, Solutions) = True or False
+=NP-hard= property of computational problems that are at least as hard as the hardest problems in NP (NP-complete). NP-hard problems do not necessarily have to be decision problems. They may not be verifiable in P time.
++ Halting Problem
+=NP-complete= NP and NP-hard: verifiable in P time and is at least as hard as the hardest problems in NP hence believed to require exponential time to solve in the worst case. Any problem that can be reduced to an NP-complete problem is also NP, hence can be checked in polynomial time. NP-completeness refers to a class of decision problems
+Not all optimization problems can be converted to search problems without changing their difficulty
++ TSP (optimisation, NP-hard) -> Hamiltonian Cycle (decision, NP-complete)
+=Reductions= transform a problem into another (can be composed):
+A = f -> B -> g by composition of functions
+A reduces to B means A <= B.
+_Prove problem A is at least NP-complete_
+Demonstrate a reduction from a known NP-complete problem to A.
+1. Define (polynomial): Inputs in A to Inputs in B.
+2. Prove: if problem A has solutions for x, B has a solution for f(x)
+3. Define (polynomial): from solutions in B to solutions in A.
+4. Prove: if y is a solutions for f(x), g(y) is a solution for x.
+   A) A has a solution iff B has a solution.
+   B) A having a solution implies B having a solution and A not having a solution implies B not having.
+start from p1, formulate p2, solve p2, get p1 solutions
+_Prove that a problem is NP_
+Find a polynomial algorithm checking a solution.
+* Problems
+- Independent Set :: is there a set of vertices where no two have a common edge, of size > k (NP decision)
+- Clique :: finding complete subgraphs of size K.
+- 3SAT :: given a boolean formula in CNF, does there exist a solution?
+harder subset of SAT where every clause has 3 literals
+one literal needs to be true in every clause
+(A or B or C) AND (not A or B or not C)
+- Hamiltonian Cycle :: is there a path visiting every node once?
+- TSP               :: find the minimum H. Cycle.
+- Subset sum :: is there a subset whose sum equal to a certain number.
+- Partition  :: is there a partition in 2 sets such that each is equal to the same number.
+- Bin Packing :: decide if a set of items with a size each can be fit in N bins of fixed capacity.
+- Set Cover :: Gives some subsets of X, find the minimal group of them so the union gives X.
+as an NP search: Is there a group of sets whose union gives X?
+- Vertex Cover :: given an undirected graph, a subset of the vertices is a subset cover if _for any edge_, one of the two connected vertices is in the set.
+not all graphs are bipartite (triangle graph)
+if a set is a vertex cover, the remaining vertices have to be an independent set
+- Circuit SAT :: Given a boolean circuit (DAG) with one output, find an input for which the output is 1.
+* Independent Set to Clique
+Define the complement of a graph G = (V,E) to be G* = (V,E*), where E* are the missing vertices from E. Then a set of nodes S is an independent set of G if and only if S is a clique of G. To paraphrase, these nodes have no edges between them in G if and only if they have all possible edges between them in G. Reduce INDEPENDENT SET to CLIQUE by mapping an instance (G,g) of INDEPENDENT SET to the corresponding instance (G, g) of CLIQUE; the solution to both is identical.
+* 3SAT to Independent Set
+Note the solution has one truth per clause.
+Rapresent every clause with three nodes as a triangle of literals (+edges). Connect all literals with their negation.
+Find the Independent Set of size "number-of-clauses".
+* Max Flow to Linear Programming
+1. Name all edges as variables.
+2. Add the bounds on capacity and conservation.
+3. Bound every edge with its capacity.
+4. Add slack variables for the constraints.
+5. Add an objective function that maximizes the flow value.
+* Hamiltonian Cycle to TSP :less:
+Given an input graph G for the Hamiltonian Cycle problem, construct a complete weighted graph G' with the same set of vertices as G. For each pair of vertices u, v in G', calculate the weight w(u, v) of the edge (u, v) as follows:
+a. If there is an edge (u, v) in G, set w(u, v) to the weight of that edge.
+b. Otherwise, set w(u, v) to a very large value (larger than the sum of weights of all edges in G).
+Find the shortest path in G'. If the length of the shortest Hamiltonian cycle found in step 3 is less than or equal to a given threshold, then the input graph G contains a Hamiltonian cycle; otherwise, it does not.
+* TSP to Hamiltonian Cycle
+If the graph in TSP is not complete, meaning it does not have edges connecting every pair of vertices, we cannot directly reduce TSP to the Hamiltonian Cycle problem, because it assumes a complete graph as input.
+Given an instance (G, d) of TSP, where G is a complete graph with vertices representing cities and edges representing distances between cities, and d is the distance function, we construct an instance G' of the Hamiltonian Cycle problem as follows:
+1. Create a copy of G, denoted as G'.
+2. Assign a weight of 1 to each edge in G'.
+3. Add a new vertex, v, to G', and connect v to every vertex in G' with an edge of weight 2.
+* Subset sum to Partition
+Given a set of integers and a paramter k.
+Given an instance (S, t) of the Subset Sum problem, where S is a set of integers and t is a target sum, construct an instance (A) of the Partition problem: take the same integers, with b = 2 * TOT - k and c = A + k added. The new total is 4A hence find a partition that sums to 2A.
+* Independent Set to Subset sum
+Define integers a_i for every vertex, and b_(i,j) for every edge, and k' parameter.
+Write the integers in a matrix, where the first column is (1 for a, 0 for b). There is a column for other edge: 1 at all the a_i and 0 everywhere else. k' := k*4^|E| + sum_{j=0}^{|E|-1}4^i
+Subset sum is also NP complete.
+* Subset Sum to Knapsack
+Consider Knapsack with n items, weight and value of each item is equal to the corresponding integer in the Subset Sum instance.
+Set capacity equal to the target value of the Subset Sum instance. Solve Knapsack.
+If the Knapsack problem returns "Yes", then there exists a subset of the integers in the Subset Sum instance that sums to the target value. Since the Knapsack problem is known to be NP-hard, this implies that the Subset Sum problem is also NP-hard.
+* Partition Problem to Bin Packing
+1. Calculate the sum of all integers in S and divide it by 2, denoted as B. This is the target bin capacity.
+2. Create a set of items, where each item corresponds to an integer in S and has a size equal to that integer.
+* Vertex Cover to Set cover
+Given a graph (V,E) with n vertices and m edges, create a set where X = E, and S_v for each vertex, containing edges connected to the vertex.
+* Vertex Cover to Hamiltonian Cycle
+1. Create a new graph where every edge is replaced by the pinecomb
+2. Add the two nodes in the vertex cover
+3. Compose the cycle
+* Set Cover to Independent set
+Given an instance (U, S) of the Set Cover problem, where U is a universal set of elements and S is a collection of subsets of U, we construct an instance (G, k) of the Independent Set problem as follows:
+1. Create a graph G with a vertex for each element in U.
+2. For each subset in S, create a clique (a complete subgraph) in G using the vertices corresponding to the elements in that subset.
+3. Set the value of k to be equal to the number of subsets in S.
+* Vertex Cover to Hamiltonian Cycle
+1. Given an instance of the Vertex Cover problem, with a graph G and an integer k.
+2. Create a new graph G' by adding a cycle of length 3k to G.
+3. For each edge (u, v) in G, add two new edges connecting u and v to different vertices on the added cycle in G'.
+4. Set the new value of k' to be k + 2.
+5. Output the transformed instance (G', k').
+* Circuits
+- There are a total of 2^(2^(n*m)) possible boolean functions from B^n to B^m.
+- All boolean functions of n inputs are computable by a circuit with O(2^n) gates
+You can reduce a function of n inputs to two different ones of (n-1) inputs.
+  1. Given a function of n inputs, construct 2 functions with (n-1), and 0 or 1 at the last element.
+  2. [...]
+  3. G(1) = 2, G(n) = 2*G(n-1) + 4, hence G(n) = 3*2^n + 4
+Create a function that maps all combinations of an input to the nth element of a boolean vector B^2^n
+The nth true is the solution.
+A function has a true dimension, which may be lower than the one of embedding.
+You can convert an algorithm into a circuit:
++ Given an algorithm A that runs in t(n) on n-bit inputs, uses m(n) bits in memory and outputs one bit.
++ For every n, there is a circuit with O(t(n) * m(n)) gates that simulates A in n-bit inputs.
+* Circuit SAT is NP-complete.
+1. Take a search problem X in NP. There's V_X(I,S) computable in P, checking the correctness of S for I input.
+2. Given input X of len n, f(X) constructs a circuit.
+3. Given input to X, construct input c_I to Circuit SAT.
+4. Given input I making C_I output 1, find S valid for I.
+5. If I has a solution, C_I must have another.
+* Circuit SAT <= 3SAT (reduces to)
+1. Start from the circuit and label it at all steps
+2. Write the logical expressions for each variable in terms of the others
+3. Compute a table for all expressions combining 2 inputs with an output Compose 3-literal OR
+4. Combine all ORs with AND
+A Boolean circuit with g gates can be described in O(g log(g)) bits.

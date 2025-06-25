@@ -1,0 +1,113 @@
+#+title: PDI BB Challenge
+#+author: Tebe Nigrelli
+#+created: [2024-11-07 Thu]
+
+The Busy Beaver Challenge
+
+* Collaborative Development within Mathematics
+
+Recent developments in mathematics allow computers to check proofs that mathematicians develop.
+: draw a diagram
+
+As a tool, this means being able to trust what your colleagues without having to check their mathematics yourself.
+
+The busy beaver community is an example of such a case: problem which is difficult and also quite vast, making it perfect for collaboration.
+- There are (10^15) very short computer programs, each a little bit different from the other. They all produce some output, based on their programming.
+  : "if last letter is 1, write 10. If last letter is 0, write 1" -> goes forever
+  : "if last letter n is odd and < 10, write n+2" -> stops
+  - Some of these programs stop, others keep doing something forever.
+    : drawing of the race, where some cars go forever, some stop soon, some stop far away.
+  - There are two questions: which are the ones that stop, and among the ones that stop, which is THE program that takes the longest?
+    : draw a line perpendicular to the longest running line in the race, showing that all the others that eventually stop are behind it
+
+Mathematicians were able to find BB(5), which was thought to be impossible.
+: write "BB(5)" on the whiteboard
+: (2kn+1)^(kn)
+
+Why do we care?
+- The program sometimes print something interesting [the next prime number], so if we understand the program we understand the problem. The machines always have the same structure, so it's a standard way to look at things.
+  : Collatz Conjecture: odd -> 3n+1, even -> n/2
+
+How to contribute?
+- Pick a program, understand what it does. Then you label it (infinity, 100, 1000) and you extend this knowledge to other similar programs, labelling all variations that act the same.
+  : [write "AA" forever] is the same as [write "AAB" forever] and [write "-" as long as "-" is different from "0"]
+- Understanding != Being sure. There's a way to verify that your reasoning works: there is a way to write the reasoning into a program, which will tell you if it's correct. If it's correct, you share it with the others so they can benefit, and this way, one step at a time
+  : draw a box which represents of all the possible programs and carve it into squares which are excluded one at a time
+
+Collaboration Tools (always with moderators, with varying level of accessibility)
+- Website: guide, description, a scoreboard of open problems
+  : Wiki main page
+- Wiki: additional information
+  :
+- Discord: to communicate with resources, discussions, feeling like the community
+  :
+- Github: for sharing the code centrally
+  : show version control
+
+Why it works
+- Very regular approach, easy to check (removes the need for expert supervision)
+
+* Cosa includere
+
+- Come gli utenti interagiscono e come la comunità rende disponibile?
+- Perché una persona può decidere di partecipare alla comunità?
+  : voglia, comunità, obbiettivi personali
+- Esistono
+
+* Link
+BB Wiki
+- [[https://wiki.bbchallenge.org/wiki/Main_Page][Wiki Main Page]]
+- [[https://wiki.bbchallenge.org/wiki/Holdouts_lists][BB Holdout lists]]
+- [[https://wiki.bbchallenge.org/wiki/Inductive_Proof_System][Jumpstart on BB wiki]]
+- [[https://wiki.bbchallenge.org/wiki/Probvious][Specific terms]]
+
+Github
+- [[https://github.com/bbchallenge/bbchallenge-paper/tree/main][Github project (main)]]
+- [[fil:~/Scripts/bbchallenge-paper/][Formalisation BB paper]]
+- [[fil:~/Scripts/Coq-BB5/][COQ BB(5)]]
+
+* Scaletta
+
+Proof Assistants
++ Equivalence between proofs and computer programs
++ How this proof looks
++ Why it's good to have in a collaborative setting
+
+* Speaker Notes
+
+As a student of the Artificial Intelligence course,
+I am interested in Mathematics, which is not strictly related to management,
+but it can provide some very relevant examples of collaborative communities.
+Normally, mathematicians work in groups, discovering concepts together and sharing them in other universities. This means sharing a lot of information, inherently a knowledge process. It was researchers who developed the WWW at CERN.
+
+
+
+A relatively recent discovery is now allowing bigger groups of mathematicians to collaborate: Proof Assistant Languages.
+These programming languages allow mathematicians to write proofs as computer programs. You come up with the proof and you use a machine to check that it is correct.
+Concretely, is written as a list of steps. You write the steps as lines, and you run the code. If the program reaches the end, the proof is correct, otherwise it reports that the proof is wrong.
+This is incredible, because it allows mathematicians to trust other people’s proofs without having to check them themselves. New knowledge is ‘certified’ by a computer.
+
+
+
+Started in 2022, to prove the 2020 conjecture BB(5) = 47,176,870.
+It is a large community of people interested in solving a specific problem. The research is unique because it is composed of many cases that need to be checked separately.
+The problem involves checking all algorithms of a certain length: some stop after some steps, some keep running forever. The question is, amone the algorithmsthat stop, which one takes the longest?
+The Discord community has 600 members, but recognised collaborators are around 30. Efforts are spread
+
+
+
+Members can use the main website to check if their discoveries have already been made, and to look for new cases to check. The list is updated periodically, so time is not wasted rediscovering knowledge. Once a case is solved, the proof is saved.
+Cases are indexed in a standardised way so they are easily recreated and searched for in the community -> tools are shared
+The image on the left gives a qualitative description of the case.
+The community serves as a hub to discuss different solving techniques. Over time, spaces have formed to discuss concepts that are not directly related to BB. This allows the community to be more productive, because members are not just working, but they feel a part of a social group.
+
+
+
+As conversations are prone to losing important information over time, the most important concepts are saved in the wiki.
+The wiki contains the quickstart page with guidance for new members and with concrete knowledge and advice.
+The table shows the current state of human knowledge. The extreme orange boxes are believed to be the limit of human knowledge -> numbers become so large even describing them indirectly requires too much memory, and there’s not enough particles in the universe.
+
+
+
+This graph represents the history of the code aka the main proof: as more code is added, another group of cases is solved and the proof becomes larger.
+Economic (code proving), Social (personal fulfillment, peer to peer), Technologic
