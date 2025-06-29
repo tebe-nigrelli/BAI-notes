@@ -16,6 +16,10 @@ The [BAI](https://www.unibocconi.it/en/programs/bachelor-science/mathematical-an
 
 All of first year involved learning how to study and adapting to the heavier workload of university. Although I found the subjects fascinating, the content was sometimes overwhelming. In other cases, such as Physics, I thought I understood the content, which led me to overestimate preparation for the exams.
 
+![](img/year_1.png)
+
+I should note that I only started tracking my study hours in the second semester.
+
 **First Semester**
 - Y11 AN1: Mathematical Analysis Mod. 1
 - Y11 ALG: Algebra And Geometry
@@ -31,6 +35,8 @@ All of first year involved learning how to study and adapting to the heavier wor
 ## Second Year
 
 Once I understood the study methodology better, I experimented with different levels of following classes: since Bocconi does not have mandatory attendence, I decided not to follow Statistics, which turned out to be an oversight. 
+
+![](img/year_2.png)
 
 **First Semester**
 - [Y21 PH2](Y21_PH2): Foundations Of Physics II
@@ -54,6 +60,8 @@ I had a whole linguistic journey in second year: I briefly considered learning G
 ## Third Year
 
 The last subjects of the bachelor involved more mathematics and greater overlap between fields. I found Statistical and Quantum Physics of particular brilliance, since it touched Algorithms, Simulations, Approximations and Statistics. At the same time, I decided to lighten my load by taking a Management elective.
+
+![](img/year_3.png)
 
 **First Semester**
 - [Y31 QPH](Y31_QPH): Statistical And Quantum Physics
